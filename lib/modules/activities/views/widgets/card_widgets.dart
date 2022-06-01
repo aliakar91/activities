@@ -28,14 +28,27 @@ class CardWidgets extends StatelessWidget {
           ' ${activityObject.participants}',
         ),
         title: Text(activityObject.activity),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.delete,
-            color: Colors.red,
-          ),
-          onPressed: () {
-            controller.deleteList(activityObject);
-          },
+        trailing: Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+              onPressed: () {
+                controller.deleteList(activityObject);
+              },
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+              onPressed: () {
+                controller.deleteList(activityObject);
+              },
+            ),
+          ],
         ),
       ),
     );
