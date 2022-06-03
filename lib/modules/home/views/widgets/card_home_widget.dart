@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'rich_text_widgets.dart';
 
 class CardHomeWidget extends StatelessWidget {
+
   final HomeController homeController;
   const  CardHomeWidget({
     Key? key,
@@ -16,6 +17,7 @@ class CardHomeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Card(
       elevation: 6,
       margin: AppDimens.homeEdgeInsets,
@@ -38,7 +40,7 @@ class CardHomeWidget extends StatelessWidget {
                     ),
                     RichTextWidgets(
                       textTitle: 'Type: ',
-                      textActivity: homeController.showActivity.type,
+                      textActivity: homeController.showActivity.type.toCapitalized(),
                     ),
                     RichTextWidgets(
                       textTitle: 'Participants: ',
@@ -86,4 +88,9 @@ class CardHomeWidget extends StatelessWidget {
       ),
     );
   }
+
+}
+extension StringCasingExtension on String {
+  String toCapitalized() => length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+// String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
 }

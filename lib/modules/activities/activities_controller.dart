@@ -11,6 +11,7 @@ class ActivitiesController extends GetxController {
 
   ///var addedListActivities2 = [].obs; yukarıdaki tanımlama obs (Activity Tipini belirtmek için)
   var addedListActivities = <Activity>[].obs;
+  var newlist = <Activity>[].obs;
 
   void deleteList(Activity activity) {
     storageRepository.delete(activity);
@@ -18,8 +19,7 @@ class ActivitiesController extends GetxController {
     update();
   }
 
-  void
-  readActivityList() async {
+  void readActivityList() async {
     addedListActivities.value = await storageRepository.getAll();
     update();
   }

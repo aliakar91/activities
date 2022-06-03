@@ -14,6 +14,7 @@ import 'widgets/card_home_widget.dart';
 class HomeScreen extends StatelessWidget {
   final HomeController homeController = Get.put(HomeController());
 
+
   @override
   Widget build(BuildContext context) {
     List<Activity> listActivity = homeController.addedListActivities;
@@ -69,13 +70,17 @@ class HomeScreen extends StatelessWidget {
                         : Column(),
               ),
             ),
-            MyButton(
-                text: 'Listeyi Görüntüle',
-                icon: Icons.format_list_bulleted_rounded,
-                onPressed: () {
-                  homeController.goActivitiesPage();
-                  print(listActivity.length);
-                }),
+            Column(
+              children: [
+                MyButton(
+                    text: 'Listeyi Görüntüle',
+                    icon: Icons.format_list_bulleted_rounded,
+                    onPressed: () {
+                      homeController.goActivitiesPage();
+                      print(listActivity.length);
+                    }),
+              ],
+            ),
           ],
         ),
       ),

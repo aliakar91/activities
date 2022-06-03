@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 class HomeController extends GetxController {
   ActivityRepository activityRepository = ActivityRepository();
+  var count = 30.obs;
 
   ///ActivityRepository'de ki verileri kullanabilmek için instance oluşturuldu.
 
@@ -72,8 +73,7 @@ class HomeController extends GetxController {
     update();
   }
 
-  void controlList() async {
-
-
+  countIncrease() async {
+    count--;
   }
 }

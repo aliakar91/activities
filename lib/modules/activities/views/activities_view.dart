@@ -6,12 +6,15 @@ import 'package:activity_app_with_getx/modules/activities/activities_controller.
 import 'package:activity_app_with_getx/modules/activities/views/widgets/card_widgets.dart';
 import 'package:activity_app_with_getx/modules/home/home_controller.dart';
 import 'package:activity_app_with_getx/modules/home/views/home_view.dart';
+import 'package:anim_search_bar/anim_search_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 class ActivityScreen extends StatelessWidget {
   final ActivitiesController controller = Get.put(ActivitiesController());
+  TextEditingController newController = TextEditingController();
 
   /// final HomeController newController = Get.find() ile başka sayfadaki controllerı bulmamız sağlanır ve
   /// newcontroller.refreshActivities(); fonksiyonunu cagırıp işlem halledilir.
@@ -30,39 +33,50 @@ class ActivityScreen extends StatelessWidget {
         print('Geri düğmesine basıldı');
         return true;
       },
-      child:GetBuilder<ActivitiesController> (builder:(_)=>  Scaffold(
-        appBar: AppBar(
-          title: Text('Activities List'),
-          centerTitle: true,
+      child: GetBuilder<ActivitiesController>(
+        builder: (_) => Scaffold(
+          appBar: AppBar(
+            actions: [],
+            title: Text('Activities List'),
+            centerTitle: true,
+          ),
+          body: activities.isEmpty
+              ? Center(
+                  child: GetBuilder<ActivitiesController>(
+                    builder: (_) => Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(color: AppColors.primary),
+                          SizedBox(
+                            height: 80,
+                          ),
+                          Text(
+                            'Eklenen Aktivite Bulunamadı',
+                            style: TextStyle(fontSize: 20, color: AppColors.primary),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: AppDimens.homeEdgeInsets,
+                  child: GetBuilder<ActivitiesController>(
+                    builder: (_) => Column(
+                      children: [
+                        Expanded(
+                          child: ListView(
+                            children: activities
+                                .map((activityObject) => CardWidgets(activityObject: activityObject))
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
         ),
-        body: activities.isEmpty
-            ? Center(
-                child: GetBuilder<ActivitiesController>(
-                builder: (_) => Container(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(color: AppColors.primary),
-                    SizedBox(
-                      height: 80,
-                    ),
-                    Text(
-                      'Eklenen Aktivite Bulunamadı',
-                      style: TextStyle(fontSize: 20, color: AppColors.primary),
-                    ),
-                  ],
-                )),
-              ))
-            : Padding(
-                padding: AppDimens.homeEdgeInsets,
-                child: GetBuilder<ActivitiesController>(
-                    builder: (_) => ListView(
-                          physics: BouncingScrollPhysics(),
-                          children:
-                              activities.map((activityObject) => CardWidgets(activityObject: activityObject)).toList(),
-                        )),
-              ),
-      ),
       ),
     );
   }
