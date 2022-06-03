@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:activity_app_with_getx/modules/activities/views/activities_view.dart';
 import 'package:activity_app_with_getx/models/activity.dart';
 import 'package:activity_app_with_getx/repositories/activity_repository.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
   ActivityRepository activityRepository = ActivityRepository();
-  var count = 30.obs;
+  var time = DateTime.now().obs;
+  String? timeString;
 
   ///ActivityRepository'de ki verileri kullanabilmek için instance oluşturuldu.
 
@@ -47,9 +51,18 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
+  void onReady() {
+    dateTimeTest();
+  }
+
   void readActivityList() async {
     addedListActivities.value = await activityRepository.getAll();
     update();
+  }
+
+  void dateTimeTest() {
+    time.value = DateTime.now();
+    Future.delayed(Duration(seconds: 1)).then((_) => dateTimeTest());
   }
 
   void getActivity() async {
@@ -71,9 +84,5 @@ class HomeController extends GetxController {
   void refreshActivities() async {
     addedListActivities.value = await activityRepository.getAll();
     update();
-  }
-
-  countIncrease() async {
-    count--;
   }
 }

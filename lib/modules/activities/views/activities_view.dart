@@ -1,3 +1,4 @@
+import 'package:activity_app_with_getx/denemeTime/time_deneme.dart';
 import 'package:activity_app_with_getx/globals/styles/app_colors.dart';
 import 'package:activity_app_with_getx/globals/styles/app_dimens.dart';
 import 'package:activity_app_with_getx/main.dart';
@@ -25,7 +26,7 @@ class ActivityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Activity> activities = controller.addedListActivities;
+    List<Activity> activities = controller.showActivities;
     return WillPopScope(
       onWillPop: () async {
         Get.find<HomeController>().refreshActivities();
@@ -36,7 +37,17 @@ class ActivityScreen extends StatelessWidget {
       child: GetBuilder<ActivitiesController>(
         builder: (_) => Scaffold(
           appBar: AppBar(
-            actions: [],
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Get.to(Clock());
+                },
+                child: Text(
+                  'abc',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ],
             title: Text('Activities List'),
             centerTitle: true,
           ),
@@ -65,6 +76,27 @@ class ActivityScreen extends StatelessWidget {
                   child: GetBuilder<ActivitiesController>(
                     builder: (_) => Column(
                       children: [
+                        TextField(
+                            controller: newController,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: AppColors.primary,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.clear),
+                                onPressed: () {
+                                  newController.clear();
+                                },
+                                color: AppColors.primary,
+                              ),
+                              hintText: 'Search',
+                              hintStyle: TextStyle(color: AppColors.primary),
+                            ),
+                            onChanged: (newSearch) {
+                              controller.searchList(newSearch);
+                              // controller.findList(controller.addedListActivities,newSearch);
+                            }),
                         Expanded(
                           child: ListView(
                             children: activities

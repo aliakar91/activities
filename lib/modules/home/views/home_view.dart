@@ -9,6 +9,7 @@ import 'package:activity_app_with_getx/modules/home/views/widgets/show_last_two_
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'widgets/card_home_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -21,7 +22,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
               icon: Icon(Icons.lightbulb),
@@ -33,7 +34,7 @@ class HomeScreen extends StatelessWidget {
             Text(
               Strings.activityName,
               style: TextStyle(
-                fontSize: 25,
+                fontSize: 20,
               ),
             ),
             IconButton(
@@ -42,6 +43,9 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Get.changeTheme(ThemeData.dark());
               },
+            ),
+            Obx(
+              () => Text(DateFormat('hh:mm:ss').format(homeController.time.value), style: TextStyle(fontSize: 12)),
             ),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:activity_app_with_getx/models/activity.dart';
 import 'package:activity_app_with_getx/repositories/activity_repository.dart';
+import 'package:flutter/cupertino.dart';
 
 //import 'package:activity_app_with_getx/repositories/storage_class.dart';
 import 'package:get/get.dart';
@@ -10,17 +11,23 @@ class ActivitiesController extends GetxController {
   ///instance oluşturuyor
 
   ///var addedListActivities2 = [].obs; yukarıdaki tanımlama obs (Activity Tipini belirtmek için)
-  var addedListActivities = <Activity>[].obs;
-  var newlist = <Activity>[].obs;
+  var showActivities = <Activity>[].obs; //copy list
+  var activities = <Activity>[]; //main list
 
   void deleteList(Activity activity) {
     storageRepository.delete(activity);
-    addedListActivities.value.remove(activity);
+    showActivities.remove(activity);
+    update();
+  }
+
+  void searchList(String newSearch) {
+    showActivities.value = activities.where((a) => a.activity.toLowerCase().contains(newSearch.toLowerCase())).toList();
     update();
   }
 
   void readActivityList() async {
-    addedListActivities.value = await storageRepository.getAll();
+    activities = await storageRepository.getAll();
+    showActivities.value = List.from(activities);
     update();
   }
 }
