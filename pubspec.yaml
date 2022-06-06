@@ -24,7 +24,15 @@ dependencies:
   anim_search_bar: ^2.0.2
   intl: ^0.17.0
   image_picker: ^0.8.5+3
+  timezone: ^0.8.0
+  analog_clock: ^0.1.0
 
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/image/123icon.png
+    - assets/image/123icon.jpg
 
 dev_dependencies:
   flutter_test:
@@ -34,8 +42,5 @@ dev_dependencies:
   flutter_lints: ^1.0.0
 
 
-flutter:
 
-
-  uses-material-design: true
 

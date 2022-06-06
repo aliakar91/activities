@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 
 class ActivitiesController extends GetxController {
   ActivityRepository storageRepository = ActivityRepository();
-
+  var time = DateTime.now().obs;
   ///instance oluşturuyor
 
   ///var addedListActivities2 = [].obs; yukarıdaki tanımlama obs (Activity Tipini belirtmek için)
@@ -21,6 +21,9 @@ class ActivitiesController extends GetxController {
     update();
   }
 
+  void onReady() {
+    dateTimeTest();
+  }
   void searchList(String newSearch) {
     showActivities.value = activities.where((a) => a.activity.toLowerCase().contains(newSearch.toLowerCase())).toList();
     if(showActivities.value.length==0){
@@ -35,6 +38,10 @@ class ActivitiesController extends GetxController {
     showActivities.value = List.from(activities);
 
     update();
+  }
+  void dateTimeTest() {
+    time.value = DateTime.now();
+    Future.delayed(Duration(seconds: 1)).then((_) => dateTimeTest());
   }
 
 }

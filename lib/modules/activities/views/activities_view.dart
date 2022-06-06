@@ -7,17 +7,22 @@ import 'package:activity_app_with_getx/modules/activities/activities_controller.
 import 'package:activity_app_with_getx/modules/activities/views/widgets/card_widgets.dart';
 import 'package:activity_app_with_getx/modules/home/home_controller.dart';
 import 'package:activity_app_with_getx/modules/home/views/home_view.dart';
+import 'package:analog_clock/analog_clock.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
+
 
 class ActivityScreen extends StatelessWidget {
   final ActivitiesController controller = Get.put(ActivitiesController());
   TextEditingController newController = TextEditingController();
   String newTitle = 'search';
+  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+  late FocusNode myFocusNode = FocusNode();
 
   /// final HomeController newController = Get.find() ile başka sayfadaki controllerı bulmamız sağlanır ve
   /// newcontroller.refreshActivities(); fonksiyonunu cagırıp işlem halledilir.
@@ -27,6 +32,10 @@ class ActivityScreen extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    myFocusNode = FocusNode();
+  }
+
   Widget build(BuildContext context) {
     List<Activity> activities = controller.showActivities;
     return WillPopScope(
@@ -38,9 +47,33 @@ class ActivityScreen extends StatelessWidget {
       },
       child: GetBuilder<ActivitiesController>(
         builder: (_) => Scaffold(
+          key: _scaffoldkey,
           appBar: AppBar(
-            title: Text('Activities List'),
-            centerTitle: true,
+            title: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+              children: [
+                Text('Activities List'),
+                Obx(() => Column(mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      DateFormat('hh:mm:ss').format(controller.time.value),
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      '${controller.time.value.day.toString()}' +
+                          '/' +
+                          '${controller.time.value.month.toString()}' +
+                          '/' +
+                          '${controller.time.value.year.toString()}',
+                    ),
+                  ],
+                ),
+                ),
+              ],
+            ),
           ),
           body: activities.isEmpty
               ? Padding(
@@ -58,34 +91,48 @@ class ActivityScreen extends StatelessWidget {
                                     color: AppColors.primary,
                                     style: BorderStyle.solid,
                                   )),
-                              child: TextField(
+                              child: GestureDetector(
                                   onTap: () {
-                                    controller.newTitle.value = '';
-                                    print(controller.newTitle);
+                                    FocusScope.of(context).unfocus();
                                   },
-                                  controller: newController,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    prefixIcon: Icon(
-                                      Icons.search,
-                                      color: AppColors.primary,
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(Icons.clear),
-                                      onPressed: () {
-                                        newController.clear();
-                                        controller.readActivityList();
-
+                                  child: Obx(
+                                    () => GestureDetector(
+                                      onTap: () {
+                                        FocusScope.of(context).unfocus();
                                       },
-                                      color: AppColors.primary,
+                                      child: TextField(
+                                          focusNode: myFocusNode,
+                                          autofocus: true,
+                                          onTap: () {
+                                            myFocusNode.requestFocus();
+                                            controller.newTitle.value = '';
+                                            print(controller.newTitle);
+                                            controller.update();
+                                          },
+                                          controller: newController,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            prefixIcon: Icon(
+                                              Icons.search,
+                                              color: AppColors.primary,
+                                            ),
+                                            suffixIcon: IconButton(
+                                              icon: Icon(Icons.clear),
+                                              onPressed: () {
+                                                newController.clear();
+                                                controller.readActivityList();
+                                              },
+                                              color: AppColors.primary,
+                                            ),
+                                            hintText: controller.newTitle.value,
+                                            hintStyle: TextStyle(color: AppColors.primary, fontSize: 18),
+                                          ),
+                                          onChanged: (newSearch) {
+                                            controller.searchList(newSearch);
+                                            // controller.findList(controller.addedListActivities,newSearch);
+                                          }),
                                     ),
-                                    hintText: controller.newTitle.value,
-                                    hintStyle: TextStyle(color: AppColors.primary, fontSize: 18),
-                                  ),
-                                  onChanged: (newSearch) {
-                                    controller.searchList(newSearch);
-                                    // controller.findList(controller.addedListActivities,newSearch);
-                                  }),
+                                  )),
                             ),
                             SizedBox(
                               height: 200,
@@ -110,49 +157,56 @@ class ActivityScreen extends StatelessWidget {
                     builder: (_) => Column(
                       children: [
                         Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: AppDimens.borderRadiusMedium,
-                              side: BorderSide(
-                                color: AppColors.primary,
-                                style: BorderStyle.solid,
-                              )),
-                          child: TextField(
-                              onTap: () {
-                                controller.newTitle.value = '';
-                                print(controller.newTitle);
-                              },
-                              controller: newController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                prefixIcon: Icon(
-                                  Icons.search,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: AppDimens.borderRadiusMedium,
+                                side: BorderSide(
                                   color: AppColors.primary,
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(Icons.clear),
-                                  onPressed: () {
-                                    newController.clear();
-                                    controller.readActivityList();
-
-                                  },
-                                  color: AppColors.primary,
-                                ),
-                                hintText: controller.newTitle.value,
-                                hintStyle: TextStyle(color: AppColors.primary, fontSize: 18),
+                                  style: BorderStyle.solid,
+                                )),
+                            child: Obx(
+                              () => GestureDetector(
+                                onTap: () {
+                                  FocusScope.of(context).unfocus();
+                                },
+                                child: TextField(
+                                    focusNode: myFocusNode,
+                                    autofocus: true,
+                                    onTap: () {
+                                      myFocusNode.requestFocus();
+                                      controller.newTitle.value = '';
+                                      print(controller.newTitle);
+                                      controller.update();
+                                    },
+                                    controller: newController,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      prefixIcon: Icon(
+                                        Icons.search,
+                                        color: AppColors.primary,
+                                      ),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(Icons.clear),
+                                        onPressed: () {
+                                          newController.clear();
+                                          controller.readActivityList();
+                                        },
+                                        color: AppColors.primary,
+                                      ),
+                                      hintText: controller.newTitle.value,
+                                      hintStyle: TextStyle(color: AppColors.primary, fontSize: 18),
+                                    ),
+                                    onChanged: (newSearch) {
+                                      controller.searchList(newSearch);
+                                      // controller.findList(controller.addedListActivities,newSearch);
+                                    }),
                               ),
-                              onChanged: (newSearch) {
-                                controller.searchList(newSearch);
-                                // controller.findList(controller.addedListActivities,newSearch);
-                              }),
-                        ),
-
+                            )),
                         Expanded(
                           child: ListView(
                             children: activities
                                 .map((activityObject) => CardWidgets(activityObject: activityObject))
                                 .toList(),
                           ),
-
                         ),
                       ],
                     ),

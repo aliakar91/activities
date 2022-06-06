@@ -10,6 +10,7 @@ import 'package:activity_app_with_getx/modules/home/views/widgets/show_last_two_
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../../../denemeTime/time_deneme.dart';
 import 'widgets/card_home_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -27,20 +28,19 @@ class HomeScreen extends StatelessWidget {
               icon: Icon(Icons.lightbulb),
               iconSize: 30,
               onPressed: () {
-                Get.changeTheme(ThemeData.light());
+                Get.changeTheme(ThemeData.dark());
               },
             ),
-            Text(
-              Strings.activityName,
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
+            TextButton(onPressed: () {
+
+              Get.to(Clock());
+
+            }, child: Text('Activities Pages',style: TextStyle(color:Colors.white,fontSize: 20),),),
             IconButton(
-              icon: Icon(Icons.lightbulb_outline),
+              icon: Image.asset('assets/image/123icon.jpg'),
               iconSize: 30,
               onPressed: () {
-                Get.changeTheme(ThemeData.dark());
+                Get.changeTheme(ThemeData.light());
               },
             ),
             Column(
