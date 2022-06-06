@@ -15,7 +15,6 @@ import 'widgets/card_home_widget.dart';
 class HomeScreen extends StatelessWidget {
   final HomeController homeController = Get.put(HomeController());
 
-
   @override
   Widget build(BuildContext context) {
     List<Activity> listActivity = homeController.addedListActivities;
@@ -44,8 +43,24 @@ class HomeScreen extends StatelessWidget {
                 Get.changeTheme(ThemeData.dark());
               },
             ),
-            Obx(
-              () => Text(DateFormat('hh:mm:ss').format(homeController.time.value), style: TextStyle(fontSize: 12)),
+            Column(
+              children: [
+                Obx(
+                  () => Text(
+                    DateFormat('hh:mm:ss').format(homeController.time.value),
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                Text(
+                  '${homeController.time.value.day.toString()}' +
+                      '/' +
+                      '${homeController.time.value.month.toString()}' +
+                      '/' +
+                      '${homeController.time.value.year.toString()}',
+                ),
+              ],
             ),
           ],
         ),
