@@ -9,6 +9,7 @@ import 'package:activity_app_with_getx/modules/home/home_controller.dart';
 import 'package:activity_app_with_getx/modules/home/views/home_view.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -16,6 +17,7 @@ import 'package:get/get_core/src/get_main.dart';
 class ActivityScreen extends StatelessWidget {
   final ActivitiesController controller = Get.put(ActivitiesController());
   TextEditingController newController = TextEditingController();
+  String newTitle = 'search';
 
   /// final HomeController newController = Get.find() ile başka sayfadaki controllerı bulmamız sağlanır ve
   /// newcontroller.refreshActivities(); fonksiyonunu cagırıp işlem halledilir.
@@ -37,36 +39,67 @@ class ActivityScreen extends StatelessWidget {
       child: GetBuilder<ActivitiesController>(
         builder: (_) => Scaffold(
           appBar: AppBar(
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Get.to(Clock());
-                },
-                child: Text(
-                  'abc',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-            ],
             title: Text('Activities List'),
             centerTitle: true,
           ),
           body: activities.isEmpty
-              ? Center(
-                  child: GetBuilder<ActivitiesController>(
-                    builder: (_) => Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(color: AppColors.primary),
-                          SizedBox(
-                            height: 80,
-                          ),
-                          Text(
-                            'Eklenen Aktivite Bulunamadı',
-                            style: TextStyle(fontSize: 20, color: AppColors.primary),
-                          ),
-                        ],
+              ? Padding(
+                  padding: AppDimens.homeEdgeInsets,
+                  child: Center(
+                    child: GetBuilder<ActivitiesController>(
+                      builder: (_) => Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: AppDimens.borderRadiusMedium,
+                                  side: BorderSide(
+                                    color: AppColors.primary,
+                                    style: BorderStyle.solid,
+                                  )),
+                              child: TextField(
+                                  onTap: () {
+                                    controller.newTitle.value = '';
+                                    print(controller.newTitle);
+                                  },
+                                  controller: newController,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    prefixIcon: Icon(
+                                      Icons.search,
+                                      color: AppColors.primary,
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(Icons.clear),
+                                      onPressed: () {
+                                        newController.clear();
+                                        controller.readActivityList();
+
+                                      },
+                                      color: AppColors.primary,
+                                    ),
+                                    hintText: controller.newTitle.value,
+                                    hintStyle: TextStyle(color: AppColors.primary, fontSize: 18),
+                                  ),
+                                  onChanged: (newSearch) {
+                                    controller.searchList(newSearch);
+                                    // controller.findList(controller.addedListActivities,newSearch);
+                                  }),
+                            ),
+                            SizedBox(
+                              height: 200,
+                            ),
+                            CircularProgressIndicator(color: AppColors.primary),
+                            SizedBox(
+                              height: 80,
+                            ),
+                            Text(
+                              'Aranan Aktivite Bulunamadı',
+                              style: TextStyle(fontSize: 20, color: AppColors.primary),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -76,33 +109,50 @@ class ActivityScreen extends StatelessWidget {
                   child: GetBuilder<ActivitiesController>(
                     builder: (_) => Column(
                       children: [
-                        TextField(
-                            controller: newController,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.search,
+                        Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: AppDimens.borderRadiusMedium,
+                              side: BorderSide(
                                 color: AppColors.primary,
+                                style: BorderStyle.solid,
+                              )),
+                          child: TextField(
+                              onTap: () {
+                                controller.newTitle.value = '';
+                                print(controller.newTitle);
+                              },
+                              controller: newController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: AppColors.primary,
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.clear),
+                                  onPressed: () {
+                                    newController.clear();
+                                    controller.readActivityList();
+
+                                  },
+                                  color: AppColors.primary,
+                                ),
+                                hintText: controller.newTitle.value,
+                                hintStyle: TextStyle(color: AppColors.primary, fontSize: 18),
                               ),
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.clear),
-                                onPressed: () {
-                                  newController.clear();
-                                },
-                                color: AppColors.primary,
-                              ),
-                              hintText: 'Search',
-                              hintStyle: TextStyle(color: AppColors.primary),
-                            ),
-                            onChanged: (newSearch) {
-                              controller.searchList(newSearch);
-                              // controller.findList(controller.addedListActivities,newSearch);
-                            }),
+                              onChanged: (newSearch) {
+                                controller.searchList(newSearch);
+                                // controller.findList(controller.addedListActivities,newSearch);
+                              }),
+                        ),
+
                         Expanded(
                           child: ListView(
                             children: activities
                                 .map((activityObject) => CardWidgets(activityObject: activityObject))
                                 .toList(),
                           ),
+
                         ),
                       ],
                     ),
