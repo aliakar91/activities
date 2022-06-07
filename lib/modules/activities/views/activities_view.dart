@@ -16,14 +16,13 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 
-
 class ActivityScreen extends StatelessWidget {
   final ActivitiesController controller = Get.put(ActivitiesController());
   TextEditingController newController = TextEditingController();
   String newTitle = 'search';
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
-  late FocusNode myFocusNode = FocusNode();
-
+  bool newHintText = true;
+  final viewInsets = EdgeInsets.fromWindowPadding(WidgetsBinding.instance.window.viewInsets,WidgetsBinding.instance.window.devicePixelRatio);
   /// final HomeController newController = Get.find() ile başka sayfadaki controllerı bulmamız sağlanır ve
   /// newcontroller.refreshActivities(); fonksiyonunu cagırıp işlem halledilir.
   //final HomeController newController = Get.find();
@@ -32,45 +31,45 @@ class ActivityScreen extends StatelessWidget {
   }
 
   @override
-  void initState() {
-    myFocusNode = FocusNode();
-  }
-
   Widget build(BuildContext context) {
+    MediaQuery.of(context).viewInsets.bottom;
     List<Activity> activities = controller.showActivities;
     return WillPopScope(
       onWillPop: () async {
+
         Get.find<HomeController>().refreshActivities();
-        //newcontroller.refreshActivities();
-        print('Geri düğmesine basıldı');
+        newHintText =false;
+        print('Geri düğmesine basıldı ${newHintText}');
         return true;
       },
       child: GetBuilder<ActivitiesController>(
         builder: (_) => Scaffold(
           key: _scaffoldkey,
           appBar: AppBar(
-            title: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text('Activities List'),
-                Obx(() => Column(mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      DateFormat('hh:mm:ss').format(controller.time.value),
-                      style: TextStyle(
-                        fontSize: 18,
+                Obx(
+                  () => Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        DateFormat('hh:mm:ss').format(controller.time.value),
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '${controller.time.value.day.toString()}' +
-                          '/' +
-                          '${controller.time.value.month.toString()}' +
-                          '/' +
-                          '${controller.time.value.year.toString()}',
-                    ),
-                  ],
-                ),
+                      Text(
+                        '${controller.time.value.day.toString()}' +
+                            '/' +
+                            '${controller.time.value.month.toString()}' +
+                            '/' +
+                            '${controller.time.value.year.toString()}',
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -91,55 +90,48 @@ class ActivityScreen extends StatelessWidget {
                                     color: AppColors.primary,
                                     style: BorderStyle.solid,
                                   )),
-                              child: GestureDetector(
+                              child: TextField(
+                                autocorrect: true,
+                                  autofocus: true,
                                   onTap: () {
-                                    FocusScope.of(context).unfocus();
+                                    controller.newTitle.value = '';
+                                    print(controller.newTitle);
+                                    controller.update();
                                   },
-                                  child: Obx(
-                                    () => GestureDetector(
-                                      onTap: () {
-                                        FocusScope.of(context).unfocus();
-                                      },
-                                      child: TextField(
-                                          focusNode: myFocusNode,
-                                          autofocus: true,
-                                          onTap: () {
-                                            myFocusNode.requestFocus();
-                                            controller.newTitle.value = '';
-                                            print(controller.newTitle);
-                                            controller.update();
-                                          },
-                                          controller: newController,
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            prefixIcon: Icon(
-                                              Icons.search,
-                                              color: AppColors.primary,
-                                            ),
-                                            suffixIcon: IconButton(
-                                              icon: Icon(Icons.clear),
-                                              onPressed: () {
-                                                newController.clear();
-                                                controller.readActivityList();
-                                              },
-                                              color: AppColors.primary,
-                                            ),
-                                            hintText: controller.newTitle.value,
-                                            hintStyle: TextStyle(color: AppColors.primary, fontSize: 18),
-                                          ),
-                                          onChanged: (newSearch) {
-                                            controller.searchList(newSearch);
-                                            // controller.findList(controller.addedListActivities,newSearch);
-                                          }),
+
+                                  controller: newController,
+
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    prefixIcon: Icon(
+                                      Icons.search,
+                                      color: AppColors.primary,
                                     ),
-                                  )),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(Icons.clear),
+                                      onPressed: () {
+                                        newHintText=false;
+                                        newController.clear();
+                                        controller.readActivityList();
+                                      },
+                                      color: AppColors.primary,
+                                    ),
+
+                                    ///Hint Text Değişikliği yapılacak
+                                    hintText: newHintText == false ? controller.newTitle.value : '',
+                                    hintStyle: TextStyle(color: AppColors.primary, fontSize: 18),
+                                  ),
+                                  onChanged: (newSearch) {
+                                    controller.searchList(newSearch);
+                                    // controller.findList(controller.addedListActivities,newSearch);
+                                  }),
                             ),
                             SizedBox(
                               height: 200,
                             ),
                             CircularProgressIndicator(color: AppColors.primary),
                             SizedBox(
-                              height: 80,
+                              height: 40,
                             ),
                             Text(
                               'Aranan Aktivite Bulunamadı',
@@ -152,66 +144,76 @@ class ActivityScreen extends StatelessWidget {
                   ),
                 )
               : Padding(
-                  padding: AppDimens.homeEdgeInsets,
-                  child: GetBuilder<ActivitiesController>(
-                    builder: (_) => Column(
-                      children: [
-                        Card(
+              padding: AppDimens.homeEdgeInsets,
+                child: GetBuilder<ActivitiesController>(
+                    builder: (_) => GestureDetector(
+                      onTap: () {
+                        newHintText = false;
+                        FocusScope.of(context).unfocus();
+                        print(newHintText);
+                      },
+                      child: Column(
+                        children: [
+                          Card(
                             shape: RoundedRectangleBorder(
                                 borderRadius: AppDimens.borderRadiusMedium,
                                 side: BorderSide(
                                   color: AppColors.primary,
                                   style: BorderStyle.solid,
                                 )),
-                            child: Obx(
-                              () => GestureDetector(
-                                onTap: () {
-                                  FocusScope.of(context).unfocus();
-                                },
-                                child: TextField(
-                                    focusNode: myFocusNode,
-                                    autofocus: true,
-                                    onTap: () {
-                                      myFocusNode.requestFocus();
-                                      controller.newTitle.value = '';
-                                      print(controller.newTitle);
-                                      controller.update();
-                                    },
-                                    controller: newController,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      prefixIcon: Icon(
-                                        Icons.search,
-                                        color: AppColors.primary,
-                                      ),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(Icons.clear),
-                                        onPressed: () {
-                                          newController.clear();
-                                          controller.readActivityList();
-                                        },
-                                        color: AppColors.primary,
-                                      ),
-                                      hintText: controller.newTitle.value,
-                                      hintStyle: TextStyle(color: AppColors.primary, fontSize: 18),
+                            child: GestureDetector(
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                controller.update();
+                              },
+                              child: TextField(
+                                  autofocus: true,
+
+                                  keyboardType: TextInputType.visiblePassword,
+                                  onTap: () {
+                                    newHintText = true;
+                                    controller.newTitle.value = '';
+                                    print(controller.newTitle);
+                                    controller.update();
+                                    print(newHintText);
+
+                                  },
+                                  controller: newController,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    prefixIcon: Icon(
+                                      Icons.search,
+                                      color: AppColors.primary,
                                     ),
-                                    onChanged: (newSearch) {
-                                      controller.searchList(newSearch);
-                                      // controller.findList(controller.addedListActivities,newSearch);
-                                    }),
-                              ),
-                            )),
-                        Expanded(
-                          child: ListView(
-                            children: activities
-                                .map((activityObject) => CardWidgets(activityObject: activityObject))
-                                .toList(),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(Icons.clear),
+                                      onPressed: () {
+                                        newController.clear();
+                                        controller.readActivityList();
+                                      },
+                                      color: AppColors.primary,
+                                    ),
+                                    hintText: newHintText == false ? 'Search' : '',
+                                    hintStyle: TextStyle(color: AppColors.primary, fontSize: 18),
+                                  ),
+                                  onChanged: (newSearch) {
+                                    controller.searchList(newSearch);
+                                    // controller.findList(controller.addedListActivities,newSearch);
+                                  }),
+                            ),
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: ListView(
+                              children: activities
+                                  .map((activityObject) => CardWidgets(activityObject: activityObject))
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+              ),
         ),
       ),
     );

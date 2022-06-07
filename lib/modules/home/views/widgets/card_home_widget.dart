@@ -17,7 +17,9 @@ class CardHomeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    var myList =[1,2,3,4,5];
+    var descList= [6,5,4,3,2,1];
+    var ascList = [1,2,3,4,5,6];
     return Card(
       elevation: 6,
       margin: AppDimens.homeEdgeInsets,
@@ -79,6 +81,15 @@ class CardHomeWidget extends StatelessWidget {
                   icon: Icons.refresh,
                   onPressed: () {
                     homeController.getActivity();
+                    print(myList.sublist(1,3));
+                    print(myList.sublist(1));
+                    print('$myList');
+                    myList.shuffle();
+                    print(descList.reversed.toList());
+                    print(ascList.reversed.toList());
+                    var sList = ['one', 'two', 'three', 'four'];
+                    print(sList.firstWhere((i) => i.length > 3));
+
                   },
                 ),
               ],
