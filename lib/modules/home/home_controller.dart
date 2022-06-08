@@ -1,17 +1,20 @@
 import 'dart:async';
-
-
 import 'package:activity_app_with_getx/modules/activities/views/activities_view.dart';
 import 'package:activity_app_with_getx/models/activity.dart';
 import 'package:activity_app_with_getx/repositories/activity_repository.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:translator/translator.dart';
 
 class HomeController extends GetxController {
   ActivityRepository activityRepository = ActivityRepository();
   var time = DateTime.now().obs;
+  int saat = DateTime.now().hour;
+  int dakika = DateTime.now().minute;
+  int saniye = DateTime.now().second;
+  var changeLanguage = false.obs;
+  var dolarLira =false.obs;
   String? timeString;
+  final translator = GoogleTranslator();
 
   ///ActivityRepository'de ki verileri kullanabilmek için instance oluşturuldu.
 

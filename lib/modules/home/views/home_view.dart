@@ -10,11 +10,14 @@ import 'package:activity_app_with_getx/modules/home/views/widgets/show_last_two_
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:translator/translator.dart';
 import '../../../denemeTime/time_deneme.dart';
 import 'widgets/card_home_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   final HomeController homeController = Get.put(HomeController());
+  final translator = GoogleTranslator();
+  final input = ' Hello';
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +25,32 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              icon: Icon(Icons.lightbulb),
+              icon: Icon(
+                Icons.lightbulb,
+              ),
+              //icon: Icon(Icons.lightbulb,color:Colors.black),
               iconSize: 30,
               onPressed: () {
-                Get.changeTheme(ThemeData.dark());
+                Get.changeTheme(
+                  ThemeData.dark(),
+                );
               },
             ),
-            TextButton(onPressed: () {
-
-              Get.to(Clock());
-
-            }, child: Text('Activities Pages',style: TextStyle(color:Colors.white,fontSize: 20),),),
+            TextButton(
+              onPressed: () {
+                Get.to(Clock());
+              },
+              child: Text(
+                'Activities Pages'.tr,
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
             IconButton(
               icon: Image.asset('assets/image/123icon.jpg'),
+              //icon: Icon(Icons.lightbulb,color: Colors.white,),
               iconSize: 30,
               onPressed: () {
                 Get.changeTheme(ThemeData.light());
@@ -89,15 +102,39 @@ class HomeScreen extends StatelessWidget {
                         : Column(),
               ),
             ),
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 MyButton(
-                    text: 'Listeyi Görüntüle',
+                    text: 'Show List '.tr,
                     icon: Icons.format_list_bulleted_rounded,
                     onPressed: () {
                       homeController.goActivitiesPage();
                       print(listActivity.length);
                     }),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: AppColors.secondary,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () async {
+                    homeController.changeLanguage.value =! homeController.changeLanguage.value;
+
+                    homeController.dolarLira.value =! homeController.dolarLira.value;
+                    print('Abc${homeController.dolarLira.value }');
+                    await Future.delayed(Duration(milliseconds: 420));
+                    homeController.changeLanguage.value =! homeController.changeLanguage.value;
+
+                    Get.updateLocale(
+                      Get.locale == Locale('tr', 'TR') ? Locale('en', 'US') : Locale('tr', 'TR'),
+                    );
+                  },
+                  label: Text(
+                    'Change\nLanguage'.tr,
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  icon: Icon(Icons.change_circle_rounded),
+                ),
               ],
             ),
           ],

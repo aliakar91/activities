@@ -2,6 +2,7 @@ import 'package:activity_app_with_getx/globals/styles/app_colors.dart';
 import 'package:activity_app_with_getx/models/activity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ShowLastTwoIndex extends StatelessWidget {
   final Activity getObject;
@@ -18,8 +19,8 @@ class ShowLastTwoIndex extends StatelessWidget {
         ),
       ),
       child: ListTile(
-        leading: Text(getObject.participants.toString()),
-        title: Text(getObject.activity),
+        leading: Text(getObject.participants.toString().tr),
+        title: Text(getObject.activity.tr),
         trailing: IconButton(
           icon: Icon(
             Icons.star,

@@ -28,7 +28,7 @@ class CardWidgets extends StatelessWidget {
         leading: Text(
           ' ${activityObject.participants}',
         ),
-        title: Text(activityObject.activity),
+        title: Text(activityObject.activity.tr),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -6,13 +6,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
+
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:intl/date_symbol_data_local.dart';
+
+import 'modules/home/views/widgets/ceviri.dart';
+
 void main() async {
   await GetStorage.init();
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   tz.initializeTimeZones();
-  runApp(App());
+
+  initializeDateFormatting('tr_TR',null).then((_) => runApp(App()));
+
 }
 
 class App extends StatelessWidget {
@@ -26,7 +33,9 @@ class App extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return GetMaterialApp(
-
+          translations: Messages(),
+          locale: Locale('tr','TR'),
+          fallbackLocale: Locale('en','UK'),
           debugShowCheckedModeBanner: false,
           title: Strings.appName,
           // You can use the library anywhere in the app even in theme

@@ -27,6 +27,8 @@ dependencies:
   timezone: ^0.8.0
   analog_clock: ^0.1.0
   flutter_keyboard_visibility: ^5.2.0
+  flutter_keyboard_size: ^1.0.0+4
+  translator: ^0.1.7
 
 
 flutter:
