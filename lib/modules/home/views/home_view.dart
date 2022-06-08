@@ -118,22 +118,25 @@ class HomeScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   onPressed: () async {
-                    homeController.changeLanguage.value =! homeController.changeLanguage.value;
-
-                    homeController.dolarLira.value =! homeController.dolarLira.value;
-                    print('Abc${homeController.dolarLira.value }');
+                    homeController.changeLanguage.value = !homeController.changeLanguage.value;
+                    homeController.dolarLira.value = !homeController.dolarLira.value;
                     await Future.delayed(Duration(milliseconds: 420));
-                    homeController.changeLanguage.value =! homeController.changeLanguage.value;
-
+                    homeController.changeLanguage.value = !homeController.changeLanguage.value;
                     Get.updateLocale(
                       Get.locale == Locale('tr', 'TR') ? Locale('en', 'US') : Locale('tr', 'TR'),
                     );
                   },
-                  label: Text(
-                    'Change\nLanguage'.tr,
-                    style: TextStyle(fontSize: 17),
+                  label: Row(
+                    children: [
+                      Text(
+                        'Change\nLanguage'.tr,
+                        style: TextStyle(fontSize: 17),
+                      ),
+                    ],
                   ),
-                  icon: Icon(Icons.change_circle_rounded),
+                  icon: Icon(
+                    Icons.change_circle_rounded,
+                  ),
                 ),
               ],
             ),

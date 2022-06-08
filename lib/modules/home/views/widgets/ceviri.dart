@@ -8,7 +8,7 @@ class Messages extends Translations {
         },
         'tr_TR': {
           'Search':'Ara',
-          'Change\nLanguage':'Dili\nDeğiştir',
+          'Change\nLanguage':'   Dili\nDeğiştir',
           'Language':'Değiştir',
           ' Add': ' Ekle',
           'Refresh': '  Yenile ',
